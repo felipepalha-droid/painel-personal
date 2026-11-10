@@ -1,0 +1,415 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>[hidden]{display:none!important}</style></head><body>
+<script>const SUPA_URL='https://zcsxgagtgpqchkuguzey.supabase.co',SUPA_KEY='sb_publishable_P9Nyb6hJc129vpKzLj3lwg_X1Pqnlv1';</script>
+<title>Painel do Personal</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: barra do aluno no topo; à esquerda os dias e a sequência; à direita a ficha do dia, como uma prancheta. */
+:root{
+  --bg:#F3F1E7; --papel:#FFFDF6; --tinta:#11203A; --sub:#55607A; --linha:#DCD8C6;
+  --marca:#002E6E; --sinal:#F2C900; --ok:#0B7A3B; --ruim:#B3261E; --campo:#FFFFFF;
+  --display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --texto:"IBM Plex Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0C1424; --papel:#131E33; --tinta:#ECEADF; --sub:#9AA5BD; --linha:#26334D;
+  --marca:#8DB4FF; --sinal:#F2C900; --ok:#4CC27F; --ruim:#FF8A80; --campo:#0F192C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0C1424; --papel:#131E33; --tinta:#ECEADF; --sub:#9AA5BD; --linha:#26334D;
+  --marca:#8DB4FF; --sinal:#F2C900; --ok:#4CC27F; --ruim:#FF8A80; --campo:#0F192C; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--tinta);font:15px/1.45 var(--texto);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 48px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;gap:16px}
+h1,h2,h3{font-family:var(--display);letter-spacing:.01em;margin:0;text-wrap:balance}
+h1{font-size:30px;font-weight:800;text-transform:uppercase}
+h2{font-size:22px;font-weight:700;text-transform:uppercase}
+h3{font-size:17px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--sub)}
+.rot{font:600 11px/1 var(--texto);letter-spacing:.08em;text-transform:uppercase;color:var(--sub)}
+button,select,input,textarea{font:inherit;color:inherit}
+input,select,textarea{background:var(--campo);border:1px solid var(--linha);border-radius:6px;padding:7px 9px;min-width:0}
+input:focus-visible,select:focus-visible,button:focus-visible,textarea:focus-visible{outline:2px solid var(--marca);outline-offset:1px}
+button{cursor:pointer;border:1px solid var(--linha);background:var(--papel);border-radius:6px;padding:7px 12px;font-weight:500}
+button:hover{border-color:var(--marca)}
+button.pri{background:var(--marca);border-color:var(--marca);color:var(--papel);font-weight:600}
+button.mini{padding:3px 8px;font-size:13px}
+button.fant{border-color:transparent;background:transparent;color:var(--sub)}
+button.fant:hover{color:var(--tinta)}
+button:disabled{opacity:.4;cursor:default}
+.topo{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:end;justify-content:space-between;border-bottom:3px solid var(--tinta);padding-bottom:12px}
+.topo .nome{display:grid;gap:4px}
+#nomePlano{font:700 20px var(--display);text-transform:uppercase;width:min(360px,100%)}
+.acoes{display:flex;gap:8px;flex-wrap:wrap}
+.arq{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+label.btn{cursor:pointer;border:1px solid var(--linha);background:var(--papel);border-radius:6px;padding:7px 12px;font-weight:500;display:inline-block}
+label.btn:hover{border-color:var(--marca)}
+.arq:focus-visible+label.btn{outline:2px solid var(--marca)}
+.faixa{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.cx{background:var(--papel);border:1px solid var(--linha);border-radius:8px;padding:14px;display:grid;gap:10px;align-content:start;min-width:0}
+.ultimo{border-left:6px solid var(--sinal)}
+.big{font:800 26px/1.05 var(--display);text-transform:uppercase}
+.muted{color:var(--sub);font-size:13px}
+.grade{display:grid;grid-template-columns:280px 1fr;gap:16px;align-items:start}
+@media (max-width:820px){.grade{grid-template-columns:1fr}}
+.dias{display:grid;gap:4px}
+.dia{display:flex;align-items:center;gap:6px;padding:8px 10px;border-radius:6px;border:1px solid transparent;cursor:pointer}
+.dia:hover{border-color:var(--linha)}
+.dia.on{background:var(--tinta);color:var(--papel)}
+.dia .n{flex:1;font:700 17px var(--display);text-transform:uppercase}
+.dia .q{font:500 12px var(--mono);opacity:.75}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 4px 3px 9px;border:1px solid var(--linha);border-radius:99px;font-size:13px;background:var(--campo)}
+.chip b{font:500 11px var(--mono);color:var(--sub)}
+.chip button{border:0;padding:0 5px;background:none;color:var(--sub)}
+.linha{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.bloco{border:1px solid var(--linha);border-radius:8px;background:var(--papel);overflow:hidden}
+.bloco header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 10px;background:color-mix(in srgb,var(--tinta) 6%,var(--papel));border-bottom:1px solid var(--linha)}
+.bloco header .tit{font:700 15px var(--display);text-transform:uppercase;letter-spacing:.04em;margin-right:auto}
+.ex{display:grid;grid-template-columns:34px minmax(0,1fr) 92px 82px 120px auto;gap:8px;align-items:center;padding:8px 10px;border-top:1px solid var(--linha)}
+.ex:first-of-type{border-top:0}
+.mk{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--sinal);color:#11203A;font:800 16px var(--display)}
+.ex .nm{font-weight:600;overflow-wrap:anywhere}
+.ex .gp{font-size:12px;color:var(--sub)}
+.ex .obs{grid-column:2 / -1}
+.ex .obs input{width:100%;font-size:13px}
+@media (max-width:640px){.ex{grid-template-columns:34px 1fr 1fr}.ex .nmw{grid-column:2 / -1}.ex .tools{grid-column:1 / -1;justify-self:end}}
+.vazio{padding:28px;text-align:center;color:var(--sub);border:1px dashed var(--linha);border-radius:8px}
+.busca{display:grid;gap:8px}
+.res{max-height:340px;overflow:auto;border:1px solid var(--linha);border-radius:6px;background:var(--campo)}
+.res button{display:flex;width:100%;justify-content:space-between;gap:8px;border:0;border-bottom:1px solid var(--linha);border-radius:0;text-align:left;background:none}
+.res button:hover{background:color-mix(in srgb,var(--sinal) 25%,transparent)}
+.res small{color:var(--sub);white-space:nowrap}
+pre{margin:0;max-height:260px;overflow:auto;background:var(--campo);border:1px solid var(--linha);border-radius:6px;padding:10px;font:12px/1.4 var(--mono)}
+.aviso{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--tinta);color:var(--papel);padding:10px 16px;border-radius:8px;font-weight:500;max-width:calc(100% - 32px)}
+.tab{font-variant-numeric:tabular-nums}
+.sess{display:grid;gap:4px;font-size:13px}
+.sess div{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dotted var(--linha);padding-block:3px}
+.ok{color:var(--ok)}.ruim{color:var(--ruim)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <div class="topo">
+    <div class="nome">
+      <span class="rot">Plano de treino</span>
+      <input id="nomePlano" aria-label="Nome do plano">
+    </div>
+    <div class="acoes">
+      <input class="arq" type="file" id="abrirPlano" accept=".json,application/json,text/plain"><label class="btn" for="abrirPlano">Abrir plano (.json)</label>
+      <button id="novoPlano">Plano em branco</button>
+      <button class="pri" id="irEnviar">Enviar para o aluno</button>
+    </div>
+  </div>
+
+  <section class="cx nuvem" id="nuvem" hidden aria-label="Conta do personal">
+    <div class="linha" id="nvSair" hidden>
+      <span class="rot">Aluno</span><select id="nvAluno" aria-label="Aluno"></select>
+      <button id="nvCarregar">Abrir o plano atual dele</button>
+      <span class="muted" id="nvStatus"></span>
+      <span style="margin-left:auto" class="muted" id="nvQuem"></span><button class="mini fant" id="nvLogout">Sair</button>
+    </div>
+    <form class="linha" id="nvLogin">
+      <strong>Entre para enviar direto ao app do aluno</strong>
+      <input id="nvEmail" type="email" placeholder="e-mail" autocomplete="username" required>
+      <input id="nvSenha" type="password" placeholder="senha (mín. 6)" autocomplete="current-password" required minlength="6">
+      <button class="pri" type="submit">Entrar</button>
+      <button type="button" id="nvCriar">Criar conta</button>
+      <span class="muted" id="nvMsg"></span>
+    </form>
+  </section>
+
+  <div class="faixa">
+    <section class="cx ultimo" aria-labelledby="tUlt">
+      <h3 id="tUlt">Último treino do aluno</h3>
+      <div id="ultimo"></div>
+    </section>
+    <section class="cx" aria-labelledby="tProx">
+      <h3 id="tProx">Próximo na sequência</h3>
+      <div id="proximo"></div>
+    </section>
+    <section class="cx" aria-labelledby="tAluno">
+      <h3 id="tAluno">Dados do aluno</h3>
+      <p class="muted" style="margin:0">No app Caderno, o aluno vai em Ajustes › Exportar backup e manda o arquivo. Abra aqui para ver o histórico.</p>
+      <div><input class="arq" type="file" id="abrirBackup" accept=".json,application/json,text/plain"><label class="btn" for="abrirBackup">Abrir backup do aluno</label></div>
+    </section>
+  </div>
+
+  <div class="grade">
+    <aside class="cx" aria-label="Dias e sequência">
+      <div class="linha" style="justify-content:space-between"><h2>Dias</h2><button class="mini" id="addDia">+ Dia</button></div>
+      <div class="dias" id="dias"></div>
+      <hr style="border:0;border-top:1px solid var(--linha);width:100%">
+      <div class="rot">Sequência (ordem fixa, pode repetir)</div>
+      <div class="chips" id="seq"></div>
+      <div class="linha"><select id="seqAdd" aria-label="Dia para pôr na sequência"></select><button class="mini" id="seqBtn">Pôr</button></div>
+      <label class="rot" for="fim">No fim de todo treino</label>
+      <select id="fim"></select>
+    </aside>
+
+    <main class="cx" id="editor" aria-live="polite"></main>
+  </div>
+
+  <section class="cx" id="enviar" aria-labelledby="tEnv">
+    <h2 id="tEnv">Enviar para o aluno</h2>
+    <p class="muted" style="margin:0">Baixe o arquivo e mande pelo WhatsApp. No celular, o aluno abre o app Caderno › Montar › Importar e escolhe o arquivo. O treino anterior fica guardado no app.</p>
+    <div class="linha">
+      <button class="pri" id="nvEnviar" hidden>Enviar para o app do aluno</button>
+      <button class="pri" id="baixar">Baixar arquivo .json</button>
+      <button id="copiar">Copiar texto</button>
+      <span class="muted" id="resumoEnv"></span>
+    </div>
+    <pre id="previa" tabindex="0"></pre>
+  </section>
+</div>
+<div class="aviso" id="aviso" hidden></div>
+
+<script>
+const BIB=[["supino-reto-com-barra","Supino reto com barra","Peito","Barra"],["supino-reto-com-halteres","Supino reto com halteres","Peito","Halteres"],["supino-reto-no-smith","Supino reto no Smith","Peito","Smith"],["supino-reto-na-maquina","Supino reto na máquina","Peito","Máquina"],["supino-inclinado-com-barra","Supino inclinado com barra","Peito","Barra"],["supino-inclinado-com-halteres","Supino inclinado com halteres","Peito","Halteres"],["supino-inclinado-no-smith","Supino inclinado no Smith","Peito","Smith"],["supino-inclinado-na-maquina","Supino inclinado na máquina","Peito","Máquina"],["supino-declinado-com-barra","Supino declinado com barra","Peito","Barra"],["supino-declinado-com-halteres","Supino declinado com halteres","Peito","Halteres"],["supino-declinado-no-smith","Supino declinado no Smith","Peito","Smith"],["crucifixo-reto-com-halteres","Crucifixo reto com halteres","Peito","Halteres"],["crucifixo-reto-na-polia","Crucifixo reto na polia","Peito","Polia"],["crucifixo-inclinado-com-halteres","Crucifixo inclinado com halteres","Peito","Halteres"],["crucifixo-inclinado-na-polia","Crucifixo inclinado na polia","Peito","Polia"],["crucifixo-na-maquina-voador","Crucifixo na máquina (voador)","Peito","Máquina"],["crossover-na-polia-alta","Crossover na polia alta","Peito","Polia"],["crossover-na-polia-media","Crossover na polia média","Peito","Polia"],["crossover-na-polia-baixa","Crossover na polia baixa","Peito","Polia"],["flexao-de-bracos","Flexão de braços","Peito","Peso do corpo"],["flexao-de-bracos-inclinada","Flexão de braços inclinada","Peito","Peso do corpo"],["flexao-de-bracos-declinada","Flexão de braços declinada","Peito","Peso do corpo"],["flexao-de-bracos-com-elastico","Flexão de braços com elástico","Peito","Elástico"],["mergulho-nas-paralelas-para-peito","Mergulho nas paralelas para peito","Peito","Peso do corpo"],["mergulho-nas-paralelas-para-peito-na-maquina","Mergulho nas paralelas para peito na máquina","Peito","Máquina"],["pullover-com-halter","Pullover com halter","Peito","Halteres"],["pullover-com-barra","Pullover com barra","Peito","Barra"],["supino-com-pegada-fechada-no-smith-para-peito","Supino com pegada fechada no Smith para peito","Peito","Smith"],["supino-com-anilha-squeeze-press","Supino com anilha (squeeze press)","Peito","Anilha"],["supino-com-anilha-squeeze-press-com-halteres","Supino com anilha (squeeze press) com halteres","Peito","Halteres"],["puxada-frontal-aberta","Puxada frontal aberta","Costas","Polia"],["puxada-frontal-fechada-com-triangulo","Puxada frontal fechada com triângulo","Costas","Polia"],["puxada-frontal-supinada","Puxada frontal supinada","Costas","Polia"],["puxada-frontal-na-maquina-articulada","Puxada frontal na máquina articulada","Costas","Máquina"],["puxada-unilateral-na-polia","Puxada unilateral na polia","Costas","Polia"],["pulldown-com-bracos-estendidos-com-barra","Pulldown com braços estendidos com barra","Costas","Polia"],["pulldown-com-bracos-estendidos-com-corda","Pulldown com braços estendidos com corda","Costas","Polia"],["barra-fixa-pronada","Barra fixa pronada","Costas","Peso do corpo"],["barra-fixa-supinada","Barra fixa supinada","Costas","Peso do corpo"],["barra-fixa-pegada-neutra","Barra fixa pegada neutra","Costas","Peso do corpo"],["barra-fixa-com-elastico","Barra fixa com elástico","Costas","Elástico"],["barra-fixa-graviton-assistida","Barra fixa graviton (assistida)","Costas","Máquina"],["remada-curvada-com-barra-pronada","Remada curvada com barra pronada","Costas","Barra"],["remada-curvada-com-barra-supinada","Remada curvada com barra supinada","Costas","Barra"],["remada-curvada-com-halteres","Remada curvada com halteres","Costas","Halteres"],["remada-curvada-no-smith","Remada curvada no Smith","Costas","Smith"],["remada-unilateral-serrote","Remada unilateral (serrote)","Costas","Halteres"],["remada-baixa-com-triangulo","Remada baixa com triângulo","Costas","Polia"],["remada-baixa-com-barra-aberta","Remada baixa com barra aberta","Costas","Polia"],["remada-baixa-unilateral","Remada baixa unilateral","Costas","Polia"],["remada-baixa-na-maquina","Remada baixa na máquina","Costas","Máquina"],["remada-cavalinho-com-barra-t","Remada cavalinho com barra T","Costas","Barra"],["remada-cavalinho-na-maquina","Remada cavalinho na máquina","Costas","Máquina"],["remada-na-maquina-articulada-pronada","Remada na máquina articulada pronada","Costas","Máquina"],["remada-na-maquina-articulada-neutra","Remada na máquina articulada neutra","Costas","Máquina"],["remada-na-maquina-articulada-unilateral","Remada na máquina articulada unilateral","Costas","Máquina"],["remada-invertida","Remada invertida","Costas","Peso do corpo"],["remada-invertida-no-smith","Remada invertida no Smith","Costas","Smith"],["levantamento-terra-com-barra","Levantamento terra com barra","Costas","Barra"],["levantamento-terra-com-kettlebell","Levantamento terra com kettlebell","Costas","Kettlebell"],["levantamento-terra-com-halteres","Levantamento terra com halteres","Costas","Halteres"],["hiperextensao-lombar","Hiperextensão lombar","Costas","Peso do corpo"],["hiperextensao-lombar-com-anilha","Hiperextensão lombar com anilha","Costas","Anilha"],["encolhimento-com-barra","Encolhimento com barra","Costas","Barra"],["encolhimento-com-halteres","Encolhimento com halteres","Costas","Halteres"],["encolhimento-no-smith","Encolhimento no Smith","Costas","Smith"],["encolhimento-na-maquina","Encolhimento na máquina","Costas","Máquina"],["pullover-na-polia","Pullover na polia","Costas","Polia"],["remada-com-kettlebell","Remada com kettlebell","Costas","Kettlebell"],["remada-com-elastico","Remada com elástico","Costas","Elástico"],["desenvolvimento-com-halteres","Desenvolvimento com halteres","Ombros","Halteres"],["desenvolvimento-com-barra","Desenvolvimento com barra","Ombros","Barra"],["desenvolvimento-no-smith","Desenvolvimento no Smith","Ombros","Smith"],["desenvolvimento-na-maquina","Desenvolvimento na máquina","Ombros","Máquina"],["desenvolvimento-com-kettlebell","Desenvolvimento com kettlebell","Ombros","Kettlebell"],["desenvolvimento-arnold","Desenvolvimento Arnold","Ombros","Halteres"],["elevacao-lateral-com-halteres","Elevação lateral com halteres","Ombros","Halteres"],["elevacao-lateral-na-polia","Elevação lateral na polia","Ombros","Polia"],["elevacao-lateral-unilateral-na-polia","Elevação lateral unilateral na polia","Ombros","Polia"],["elevacao-lateral-na-maquina","Elevação lateral na máquina","Ombros","Máquina"],["elevacao-lateral-com-elastico","Elevação lateral com elástico","Ombros","Elástico"],["elevacao-lateral-inclinada","Elevação lateral inclinada","Ombros","Halteres"],["elevacao-frontal-com-halteres","Elevação frontal com halteres","Ombros","Halteres"],["elevacao-frontal-com-barra","Elevação frontal com barra","Ombros","Barra"],["elevacao-frontal-com-anilha","Elevação frontal com anilha","Ombros","Anilha"],["elevacao-frontal-na-polia","Elevação frontal na polia","Ombros","Polia"],["crucifixo-inverso-com-halteres","Crucifixo inverso com halteres","Ombros","Halteres"],["crucifixo-inverso-na-maquina","Crucifixo inverso na máquina","Ombros","Máquina"],["crucifixo-inverso-na-polia","Crucifixo inverso na polia","Ombros","Polia"],["crucifixo-inverso-com-elastico","Crucifixo inverso com elástico","Ombros","Elástico"],["face-pull-na-polia","Face pull na polia","Ombros","Polia"],["face-pull-com-elastico","Face pull com elástico","Ombros","Elástico"],["remada-alta-com-barra","Remada alta com barra","Ombros","Barra"],["remada-alta-na-polia","Remada alta na polia","Ombros","Polia"],["remada-alta-com-halteres","Remada alta com halteres","Ombros","Halteres"],["rotacao-externa-de-ombro-na-polia","Rotação externa de ombro na polia","Ombros","Polia"],["rotacao-externa-de-ombro-com-elastico","Rotação externa de ombro com elástico","Ombros","Elástico"],["rotacao-externa-de-ombro-com-halter-deitado","Rotação externa de ombro com halter deitado","Ombros","Halteres"],["desenvolvimento-militar-em-pe","Desenvolvimento militar em pé","Ombros","Barra"],["landmine-press","Landmine press","Ombros","Barra"],["rosca-direta-com-barra","Rosca direta com barra","Bíceps","Barra"],["rosca-direta-com-barra-w","Rosca direta com barra W","Bíceps","Barra"],["rosca-direta-com-halteres","Rosca direta com halteres","Bíceps","Halteres"],["rosca-direta-na-polia","Rosca direta na polia","Bíceps","Polia"],["rosca-direta-com-elastico","Rosca direta com elástico","Bíceps","Elástico"],["rosca-alternada-com-halteres","Rosca alternada com halteres","Bíceps","Halteres"],["rosca-martelo-com-halteres","Rosca martelo com halteres","Bíceps","Halteres"],["rosca-martelo-na-polia-com-corda","Rosca martelo na polia com corda","Bíceps","Polia"],["rosca-martelo-cruzada","Rosca martelo cruzada","Bíceps","Halteres"],["rosca-scott-com-barra-w","Rosca Scott com barra W","Bíceps","Barra"],["rosca-scott-com-halter","Rosca Scott com halter","Bíceps","Halteres"],["rosca-scott-na-maquina","Rosca Scott na máquina","Bíceps","Máquina"],["rosca-concentrada","Rosca concentrada","Bíceps","Halteres"],["rosca-inclinada-com-halteres","Rosca inclinada com halteres","Bíceps","Halteres"],["rosca-spider-com-barra-w","Rosca spider com barra W","Bíceps","Barra"],["rosca-spider-com-halteres","Rosca spider com halteres","Bíceps","Halteres"],["rosca-bayesian-na-polia","Rosca bayesian na polia","Bíceps","Polia"],["rosca-21-com-barra","Rosca 21 com barra","Bíceps","Barra"],["rosca-21-com-halteres","Rosca 21 com halteres","Bíceps","Halteres"],["triceps-na-polia-com-barra-reta","Tríceps na polia com barra reta","Tríceps","Polia"],["triceps-na-polia-com-barra-v","Tríceps na polia com barra V","Tríceps","Polia"],["triceps-na-polia-com-corda","Tríceps na polia com corda","Tríceps","Polia"],["triceps-na-polia-unilateral","Tríceps na polia unilateral","Tríceps","Polia"],["triceps-na-polia-pegada-invertida","Tríceps na polia pegada invertida","Tríceps","Polia"],["triceps-frances-com-halter","Tríceps francês com halter","Tríceps","Halteres"],["triceps-frances-com-barra-w","Tríceps francês com barra W","Tríceps","Barra"],["triceps-frances-na-polia-com-corda","Tríceps francês na polia com corda","Tríceps","Polia"],["triceps-frances-unilateral","Tríceps francês unilateral","Tríceps","Halteres"],["triceps-testa-com-barra-w","Tríceps testa com barra W","Tríceps","Barra"],["triceps-testa-com-halteres","Tríceps testa com halteres","Tríceps","Halteres"],["triceps-testa-na-polia","Tríceps testa na polia","Tríceps","Polia"],["triceps-coice-com-halter","Tríceps coice com halter","Tríceps","Halteres"],["triceps-coice-na-polia","Tríceps coice na polia","Tríceps","Polia"],["mergulho-no-banco","Mergulho no banco","Tríceps","Peso do corpo"],["mergulho-nas-paralelas-para-triceps","Mergulho nas paralelas para tríceps","Tríceps","Peso do corpo"],["mergulho-nas-paralelas-para-triceps-na-maquina","Mergulho nas paralelas para tríceps na máquina","Tríceps","Máquina"],["supino-fechado-com-barra","Supino fechado com barra","Tríceps","Barra"],["supino-fechado-no-smith","Supino fechado no Smith","Tríceps","Smith"],["flexao-diamante","Flexão diamante","Tríceps","Peso do corpo"],["triceps-na-maquina","Tríceps na máquina","Tríceps","Máquina"],["agachamento-livre-com-barra","Agachamento livre com barra","Quadríceps","Barra"],["agachamento-frontal-com-barra","Agachamento frontal com barra","Quadríceps","Barra"],["agachamento-no-smith","Agachamento no Smith","Quadríceps","Smith"],["agachamento-com-halteres","Agachamento com halteres","Quadríceps","Halteres"],["agachamento-goblet","Agachamento goblet","Quadríceps","Kettlebell"],["agachamento-com-peso-do-corpo","Agachamento com peso do corpo","Quadríceps","Peso do corpo"],["agachamento-hack-na-maquina","Agachamento hack na máquina","Quadríceps","Máquina"],["leg-press-45","Leg press 45°","Quadríceps","Máquina"],["leg-press-horizontal","Leg press horizontal","Quadríceps","Máquina"],["leg-press-unilateral","Leg press unilateral","Quadríceps","Máquina"],["leg-press-com-pes-altos","Leg press com pés altos","Quadríceps","Máquina"],["cadeira-extensora","Cadeira extensora","Quadríceps","Máquina"],["cadeira-extensora-unilateral","Cadeira extensora unilateral","Quadríceps","Máquina"],["afundo-com-halteres","Afundo com halteres","Quadríceps","Halteres"],["afundo-com-barra","Afundo com barra","Quadríceps","Barra"],["afundo-no-smith","Afundo no Smith","Quadríceps","Smith"],["afundo-com-peso-do-corpo","Afundo com peso do corpo","Quadríceps","Peso do corpo"],["passada-com-halteres","Passada com halteres","Quadríceps","Halteres"],["passada-com-barra","Passada com barra","Quadríceps","Barra"],["passada-com-peso-do-corpo","Passada com peso do corpo","Quadríceps","Peso do corpo"],["agachamento-bulgaro-com-halteres","Agachamento búlgaro com halteres","Quadríceps","Halteres"],["agachamento-bulgaro-no-smith","Agachamento búlgaro no Smith","Quadríceps","Smith"],["agachamento-bulgaro-com-peso-do-corpo","Agachamento búlgaro com peso do corpo","Quadríceps","Peso do corpo"],["agachamento-sumo-com-halter","Agachamento sumô com halter","Quadríceps","Halteres"],["agachamento-sumo-com-kettlebell","Agachamento sumô com kettlebell","Quadríceps","Kettlebell"],["subida-no-banco-step-up-com-halteres","Subida no banco (step-up) com halteres","Quadríceps","Halteres"],["subida-no-banco-step-up-com-peso-do-corpo","Subida no banco (step-up) com peso do corpo","Quadríceps","Peso do corpo"],["cadeira-adutora","Cadeira adutora","Quadríceps","Máquina"],["sissy-squat","Sissy squat","Quadríceps","Peso do corpo"],["agachamento-pistol-assistido","Agachamento pistol assistido","Quadríceps","Peso do corpo"],["mesa-flexora","Mesa flexora","Posterior e glúteos","Máquina"],["cadeira-flexora","Cadeira flexora","Posterior e glúteos","Máquina"],["cadeira-flexora-unilateral","Cadeira flexora unilateral","Posterior e glúteos","Máquina"],["flexora-em-pe-na-maquina","Flexora em pé na máquina","Posterior e glúteos","Máquina"],["flexora-em-pe-na-polia","Flexora em pé na polia","Posterior e glúteos","Polia"],["stiff-com-barra","Stiff com barra","Posterior e glúteos","Barra"],["stiff-com-halteres","Stiff com halteres","Posterior e glúteos","Halteres"],["stiff-unilateral-com-halter","Stiff unilateral com halter","Posterior e glúteos","Halteres"],["stiff-no-smith","Stiff no Smith","Posterior e glúteos","Smith"],["levantamento-terra-romeno-com-barra","Levantamento terra romeno com barra","Posterior e glúteos","Barra"],["levantamento-terra-romeno-com-kettlebell","Levantamento terra romeno com kettlebell","Posterior e glúteos","Kettlebell"],["elevacao-pelvica-com-barra","Elevação pélvica com barra","Posterior e glúteos","Barra"],["elevacao-pelvica-na-maquina","Elevação pélvica na máquina","Posterior e glúteos","Máquina"],["elevacao-pelvica-no-smith","Elevação pélvica no Smith","Posterior e glúteos","Smith"],["elevacao-pelvica-unilateral","Elevação pélvica unilateral","Posterior e glúteos","Peso do corpo"],["ponte-de-gluteos","Ponte de glúteos","Posterior e glúteos","Peso do corpo"],["ponte-de-gluteos-com-halter","Ponte de glúteos com halter","Posterior e glúteos","Halteres"],["ponte-de-gluteos-com-elastico","Ponte de glúteos com elástico","Posterior e glúteos","Elástico"],["gluteo-na-polia-coice","Glúteo na polia (coice)","Posterior e glúteos","Polia"],["gluteo-na-polia-coice-na-maquina","Glúteo na polia (coice) na máquina","Posterior e glúteos","Máquina"],["cadeira-abdutora","Cadeira abdutora","Posterior e glúteos","Máquina"],["cadeira-abdutora-com-tronco-inclinado-a-frente","Cadeira abdutora com tronco inclinado à frente","Posterior e glúteos","Máquina"],["abducao-de-quadril-com-elastico","Abdução de quadril com elástico","Posterior e glúteos","Elástico"],["abducao-de-quadril-na-polia","Abdução de quadril na polia","Posterior e glúteos","Polia"],["abducao-de-quadril-deitado","Abdução de quadril deitado","Posterior e glúteos","Peso do corpo"],["good-morning-com-barra","Good morning com barra","Posterior e glúteos","Barra"],["good-morning-no-smith","Good morning no Smith","Posterior e glúteos","Smith"],["kettlebell-swing","Kettlebell swing","Posterior e glúteos","Kettlebell"],["flexao-nordica","Flexão nórdica","Posterior e glúteos","Peso do corpo"],["coice-de-gluteo-na-maquina","Coice de glúteo na máquina","Posterior e glúteos","Máquina"],["panturrilha-em-pe-na-maquina","Panturrilha em pé na máquina","Panturrilha","Máquina"],["panturrilha-em-pe-no-smith","Panturrilha em pé no Smith","Panturrilha","Smith"],["panturrilha-em-pe-com-halter-unilateral","Panturrilha em pé com halter unilateral","Panturrilha","Halteres"],["panturrilha-em-pe-no-leg-press","Panturrilha em pé no leg press","Panturrilha","Máquina"],["panturrilha-sentado-na-maquina","Panturrilha sentado na máquina","Panturrilha","Máquina"],["panturrilha-sentado-com-halteres","Panturrilha sentado com halteres","Panturrilha","Halteres"],["panturrilha-no-degrau","Panturrilha no degrau","Panturrilha","Peso do corpo"],["tibial-anterior","Tibial anterior","Panturrilha","Peso do corpo"],["abdominal-supra","Abdominal supra","Abdômen","Peso do corpo"],["abdominal-supra-com-anilha","Abdominal supra com anilha","Abdômen","Anilha"],["abdominal-supra-na-maquina","Abdominal supra na máquina","Abdômen","Máquina"],["abdominal-supra-na-bola","Abdominal supra na bola","Abdômen","Peso do corpo"],["abdominal-infra","Abdominal infra","Abdômen","Peso do corpo"],["abdominal-infra-no-banco-declinado","Abdominal infra no banco declinado","Abdômen","Peso do corpo"],["elevacao-de-pernas-na-barra","Elevação de pernas na barra","Abdômen","Peso do corpo"],["elevacao-de-pernas-no-apoio-de-cotovelos","Elevação de pernas no apoio de cotovelos","Abdômen","Peso do corpo"],["elevacao-de-pernas-deitado","Elevação de pernas deitado","Abdômen","Peso do corpo"],["abdominal-na-polia-crunch-ajoelhado","Abdominal na polia (crunch ajoelhado)","Abdômen","Polia"],["prancha","Prancha","Abdômen","Peso do corpo"],["prancha-lateral","Prancha lateral","Abdômen","Peso do corpo"],["prancha-com-toque-no-ombro","Prancha com toque no ombro","Abdômen","Peso do corpo"],["abdominal-obliquo","Abdominal oblíquo","Abdômen","Peso do corpo"],["abdominal-obliquo-bicicleta","Abdominal oblíquo bicicleta","Abdômen","Peso do corpo"],["rotacao-russa","Rotação russa","Abdômen","Peso do corpo"],["rotacao-russa-com-anilha","Rotação russa com anilha","Abdômen","Anilha"],["rotacao-russa-com-halter","Rotação russa com halter","Abdômen","Halteres"],["pallof-press-na-polia","Pallof press na polia","Abdômen","Polia"],["pallof-press-com-elastico","Pallof press com elástico","Abdômen","Elástico"],["abdominal-roda","Abdominal roda","Abdômen","Peso do corpo"],["lenhador-na-polia-alta","Lenhador na polia alta","Abdômen","Polia"],["lenhador-na-polia-baixa","Lenhador na polia baixa","Abdômen","Polia"],["dead-bug","Dead bug","Abdômen","Peso do corpo"],["abdominal-canivete","Abdominal canivete","Abdômen","Peso do corpo"],["mountain-climber","Mountain climber","Abdômen","Peso do corpo"],["rosca-de-punho-com-barra","Rosca de punho com barra","Antebraço","Barra"],["rosca-de-punho-com-halteres","Rosca de punho com halteres","Antebraço","Halteres"],["rosca-de-punho-invertida-com-barra","Rosca de punho invertida com barra","Antebraço","Barra"],["rosca-de-punho-invertida-com-halteres","Rosca de punho invertida com halteres","Antebraço","Halteres"],["rosca-inversa-com-barra","Rosca inversa com barra","Antebraço","Barra"],["rosca-inversa-na-polia","Rosca inversa na polia","Antebraço","Polia"],["caminhada-do-fazendeiro-com-halteres","Caminhada do fazendeiro com halteres","Antebraço","Halteres"],["caminhada-do-fazendeiro-com-kettlebell","Caminhada do fazendeiro com kettlebell","Antebraço","Kettlebell"],["suspensao-na-barra","Suspensão na barra","Antebraço","Peso do corpo"]];
+const PLANO_ATUAL={"app_origem":"MFIT Personal","capturado_em":"2026-11-09","sequencia":["Peito","Costas","Pernas","Peito","Ombros","Bracos (Biceps/Triceps)"],"no_fim_de_todo_treino":"Abdominal","dias":[{"dia":"Costas","blocos":[{"tipo":"combinado","exercicios":[{"marcador":"A","nome":"Remada Cavalinho Neutra na Maquina","series":"5x8","carga":"0kg","grupo":"Costas"},{"marcador":"B","nome":"Remada Curvada com Halteres (Pegada Pronada)","series":"5x15","carga":"0kg","grupo":"Costas"}]},{"tipo":"combinado","exercicios":[{"marcador":"A","nome":"Puxada Aberta Barra Reta","series":"5x8","carga":"0kg","grupo":"Costas"},{"marcador":"B","nome":"Puxador Frente Supinado","series":"5x15","carga":"0kg","grupo":"Costas"}]}]},{"dia":"Peito","blocos":[{"tipo":"combinado","exercicios":[{"marcador":"A","nome":"Banco Supino Reto","series":"5x8","carga":"0kg","grupo":"Peito"},{"marcador":"B","nome":"Supino Reto com Halteres (Fly)","series":"5x15","carga":"0kg","grupo":"Peito"}]},{"tipo":"combinado","exercicios":[{"marcador":"A","nome":"Crossover na Polia Bi-Articular","series":"5x8","carga":"0kg","grupo":"Peito"},{"marcador":"B","nome":"Supino Inclinado com Halteres","series":"5x15","carga":"0kg","grupo":"Peito"}]}]},{"dia":"Pernas","blocos":[{"tipo":"combinado","exercicios":[{"marcador":"A","nome":"Agachamento Hack","series":"4x8","carga":"0kg","grupo":"Quadríceps"},{"marcador":"B","nome":"Agachamento Frente Dumbbell","series":"4x15","carga":"0kg","grupo":"Quadríceps"}]},{"tipo":"simples","exercicios":[{"nome":"Elevacao de Quadril na Maquina","series":"4x15","carga":"0kg","grupo":"Posterior e glúteos"}]},{"tipo":"simples","exercicios":[{"nome":"Cadeira Flexora","series":"6x8+15","carga":"0kg","grupo":"Posterior e glúteos"}]}]},{"dia":"Ombros","blocos":[{"tipo":"combinado","exercicios":[{"marcador":"A","nome":"Elevacao Frontal na Polia Baixa (Pegada Supinada)","series":"4x8","carga":"0kg","grupo":"Ombros"},{"marcador":"B","nome":"Elevacao Lateral (Plano Escapular)","series":"4x15","carga":"0kg","grupo":"Ombros"}]},{"tipo":"simples","exercicios":[{"nome":"Elevacao Unilateral na Polia Baixa","series":"4x15","carga":"0kg","grupo":"Ombros"}]},{"tipo":"simples","exercicios":[{"nome":"Crucifixo Inverso Maquina","series":"6x8+15","carga":"0kg","grupo":"Ombros"}]}]},{"dia":"Bracos (Biceps/Triceps)","blocos":[{"tipo":"simples","exercicios":[{"nome":"Rosca Scott Maquina","series":"6x8+15","carga":"0kg","grupo":"Bíceps"}]},{"tipo":"simples","exercicios":[{"nome":"Extensao Triceps Maquina","series":"6x8+15","carga":"0kg","grupo":"Tríceps"}]}]},{"dia":"Abdominal","blocos":[{"tipo":"combinado","exercicios":[{"marcador":"A","nome":"Reto Abdominal (Banco Inclinado)","series":"3x15","carga":"0kg","grupo":"Abdômen"},{"marcador":"B","nome":"Reto Abdominal Banco Inclinado (Mov Curto e com Braco Estendido)","series":"3x15","carga":"0kg","grupo":"Abdômen"},{"marcador":"C","nome":"Elevacao de Quadril (Banco Inclinado)","series":"3x15","carga":"0kg","grupo":"Abdômen"}]}]}]};
+
+const MODS=[["simples","Simples",1,1],["combinado","Alternado (A/B)",2,4],["biset","Bi-set",2,2],["triset","Tri-set",3,3],["superset","Super-set",2,2],["circuito","Circuito",2,12],["preexaustao","Pré-exaustão",2,2]];
+const TECS=[["normal","Normal"],["piramide","Pirâmide"],["drop","Drop set"],["restpause","Rest-pause"],["cluster","Cluster"],["isometria","Isometria"]];
+const LETRAS="ABCDEFGHIJKL";
+const sem=s=>(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+const $=id=>document.getElementById(id);
+const el=(t,a={},...k)=>{const e=document.createElement(t);for(const[n,v]of Object.entries(a)){if(n==="on")for(const[ev,f]of Object.entries(v))e.addEventListener(ev,f);else if(n in e&&n!=="list")e[n]=v;else e.setAttribute(n,v)}for(const c of k.flat())if(c!=null)e.append(c);return e};
+const clone=o=>JSON.parse(JSON.stringify(o));
+let P, diaSel=0, buscaEm=null, backup=null;
+function aviso(t){const a=$("aviso");a.textContent=t;a.hidden=false;clearTimeout(aviso.t);aviso.t=setTimeout(()=>a.hidden=true,2600)}
+function salvarLocal(){try{localStorage.setItem("painel-plano",JSON.stringify(P))}catch(e){}}
+function grupoDe(nome){const n=sem(nome);const h=BIB.find(b=>sem(b[1])===n);return h?h[2]:null}
+function normalizar(p){
+  p=clone(p);p.nome=p.nome||"Plano do personal";p.dias=p.dias||[];p.sequencia=p.sequencia||[];
+  p.dias.forEach(d=>{d.blocos=(d.blocos||[]).filter(b=>b.exercicios&&b.exercicios.length)});return p}
+function carregar(){
+  let s=null;try{s=JSON.parse(localStorage.getItem("painel-plano"))}catch(e){}
+  P=normalizar(s&&s.dias?s:Object.assign({},PLANO_ATUAL,{nome:"Treino do Felipe"}));
+}
+function marcar(b){b.exercicios.forEach((e,i)=>e.marcador=b.exercicios.length>1?LETRAS[i]:null);
+  const n=b.exercicios.length;const m=MODS.find(x=>x[0]===b.tipo);if(!m||n<m[2]||n>m[3])b.tipo=n>1?"combinado":"simples"}
+function dia(){return P.dias[diaSel]}
+function mudou(){salvarLocal();render()}
+
+/* ---------- render ---------- */
+function render(){
+  if(diaSel>=P.dias.length)diaSel=Math.max(0,P.dias.length-1);
+  $("nomePlano").value=P.nome||"";
+  renderDias();renderSeq();renderEditor();renderEnviar();renderUltimo();
+}
+function renderDias(){
+  const c=$("dias");c.replaceChildren();
+  P.dias.forEach((d,i)=>{const n=d.blocos.reduce((s,b)=>s+b.exercicios.length,0);
+    c.append(el("div",{className:"dia"+(i===diaSel?" on":""),tabIndex:0,role:"button",on:{click:()=>{diaSel=i;buscaEm=null;render()},keydown:e=>{if(e.key==="Enter"){diaSel=i;render()}}}},
+      el("span",{className:"n"},d.dia),el("span",{className:"q"},n+" ex")))});
+  if(!P.dias.length)c.append(el("p",{className:"muted"},"Nenhum dia ainda. Toque em + Dia."));
+}
+function renderSeq(){
+  const c=$("seq");c.replaceChildren();
+  P.sequencia.forEach((n,i)=>c.append(el("span",{className:"chip"},el("b",{},String(i+1)),n,
+    el("button",{title:"Mover para trás","aria-label":"Mover "+n+" para trás",disabled:i===0,on:{click:()=>{const s=P.sequencia;[s[i-1],s[i]]=[s[i],s[i-1]];mudou()}}},"‹"),
+    el("button",{title:"Tirar","aria-label":"Tirar "+n+" da sequência",on:{click:()=>{P.sequencia.splice(i,1);mudou()}}},"×"))));
+  if(!P.sequencia.length)c.append(el("span",{className:"muted"},"Vazia: o app segue a ordem dos dias."));
+  const nomes=P.dias.map(d=>d.dia).filter(n=>n!==P.no_fim_de_todo_treino);
+  $("seqAdd").replaceChildren(...nomes.map(n=>el("option",{value:n},n)));
+  $("fim").replaceChildren(el("option",{value:""},"Nenhum"),...P.dias.map(d=>el("option",{value:d.dia,selected:d.dia===P.no_fim_de_todo_treino},d.dia)));
+}
+function renderEditor(){
+  const c=$("editor");c.replaceChildren();const d=dia();
+  if(!d){c.append(el("div",{className:"vazio"},"Crie um dia para começar a montar."));return}
+  const nome=el("input",{value:d.dia,"aria-label":"Nome do dia",style:"font:700 22px var(--display);text-transform:uppercase;flex:1;min-width:160px",
+    on:{change:e=>renomear(d,e.target.value.trim())}});
+  c.append(el("div",{className:"linha"},nome,
+    el("button",{className:"mini",disabled:diaSel===0,on:{click:()=>{const a=P.dias;[a[diaSel-1],a[diaSel]]=[a[diaSel],a[diaSel-1]];diaSel--;mudou()}}},"↑"),
+    el("button",{className:"mini",disabled:diaSel===P.dias.length-1,on:{click:()=>{const a=P.dias;[a[diaSel+1],a[diaSel]]=[a[diaSel],a[diaSel+1]];diaSel++;mudou()}}},"↓"),
+    el("button",{className:"mini",on:{click:()=>{const n=clone(d);n.dia=d.dia+" (cópia)";P.dias.splice(diaSel+1,0,n);diaSel++;mudou()}}},"Duplicar"),
+    confirmarBtn("Apagar dia",()=>{P.sequencia=P.sequencia.filter(s=>s!==d.dia);if(P.no_fim_de_todo_treino===d.dia)delete P.no_fim_de_todo_treino;P.dias.splice(diaSel,1);mudou()})));
+  if(!d.blocos.length)c.append(el("div",{className:"vazio"},"Dia vazio. Adicione o primeiro exercício abaixo."));
+  d.blocos.forEach((b,bi)=>c.append(renderBloco(d,b,bi)));
+  c.append(buscaEm===null?el("div",{className:"linha"},el("button",{className:"pri",on:{click:()=>{buscaEm={novo:true};render();setTimeout(()=>$("q")?.focus())}}},"+ Exercício")):renderBusca(d));
+}
+function confirmarBtn(txt,f){
+  const b=el("button",{className:"mini fant",on:{click:()=>{if(b.dataset.armado){f()}else{b.dataset.armado=1;b.textContent="Confirmar?";b.classList.remove("fant");setTimeout(()=>{if(b.isConnected){delete b.dataset.armado;b.textContent=txt;b.classList.add("fant")}},3000)}}}},txt);return b}
+function renomear(d,novo){
+  if(!novo||novo===d.dia)return;if(P.dias.some(x=>x!==d&&x.dia===novo)){aviso("Já existe um dia com esse nome.");render();return}
+  P.sequencia=P.sequencia.map(s=>s===d.dia?novo:s);if(P.no_fim_de_todo_treino===d.dia)P.no_fim_de_todo_treino=novo;d.dia=novo;mudou()}
+function renderBloco(d,b,bi){
+  const n=b.exercicios.length;
+  const mod=el("select",{"aria-label":"Modalidade",on:{change:e=>{b.tipo=e.target.value;mudou()}}},
+    ...MODS.filter(m=>n>=m[2]&&n<=m[3]).map(m=>el("option",{value:m[0],selected:(b.tipo||(n>1?"combinado":"simples"))===m[0]},m[1])));
+  const desc=el("input",{type:"number",min:0,step:15,value:b.descanso??"",placeholder:"padrão",style:"width:84px","aria-label":"Descanso em segundos",
+    on:{change:e=>{const v=parseInt(e.target.value);if(isNaN(v))delete b.descanso;else b.descanso=v;mudou()}}});
+  const head=el("header",{},el("span",{className:"tit"},"Bloco "+(bi+1)),mod,el("span",{className:"rot"},"Descanso"),desc,el("span",{className:"muted"},"s"),
+    el("button",{className:"mini",disabled:bi===0,"aria-label":"Subir bloco",on:{click:()=>{const a=d.blocos;[a[bi-1],a[bi]]=[a[bi],a[bi-1]];mudou()}}},"↑"),
+    el("button",{className:"mini",disabled:bi===d.blocos.length-1,"aria-label":"Descer bloco",on:{click:()=>{const a=d.blocos;[a[bi+1],a[bi]]=[a[bi],a[bi+1]];mudou()}}},"↓"),
+    bi<d.blocos.length-1?el("button",{className:"mini",title:"Junta com o bloco de baixo (A/B)",on:{click:()=>{b.exercicios.push(...d.blocos[bi+1].exercicios);d.blocos.splice(bi+1,1);marcar(b);mudou()}}},"Juntar com ↓"):null,
+    el("button",{className:"mini",on:{click:()=>{buscaEm={bloco:bi};render();setTimeout(()=>$("q")?.focus())}}},"+ ao bloco"));
+  const box=el("div",{className:"bloco"},head);
+  b.exercicios.forEach((e,ei)=>box.append(renderEx(d,b,bi,e,ei)));
+  return box;
+}
+function renderEx(d,b,bi,e,ei){
+  const n=b.exercicios.length;
+  const upd=(k,v)=>{if(v===""||v==null)delete e[k];else e[k]=v;salvarLocal();renderEnviar();renderDias()};
+  const tec=el("select",{"aria-label":"Técnica",on:{change:x=>{upd("tecnica",x.target.value==="normal"?"":x.target.value)}}},...TECS.map(t=>el("option",{value:t[0],selected:(e.tecnica||"normal")===t[0]},t[1])));
+  return el("div",{className:"ex"},
+    el("span",{className:"mk"},e.marcador||"•"),
+    el("div",{className:"nmw"},el("div",{className:"nm"},e.nome),el("div",{className:"gp"},e.grupo||grupoDe(e.nome)||"")),
+    el("input",{value:e.series||"",placeholder:"4x10","aria-label":"Séries (ex.: 4x10, 6x8+15)",title:"Séries. Ex.: 4x10, 6x8+15 (drop), 3x12-10-8",on:{change:x=>upd("series",x.target.value.trim())}}),
+    el("input",{value:e.carga||"",placeholder:"kg","aria-label":"Carga",on:{change:x=>upd("carga",x.target.value.trim())}}),
+    tec,
+    el("div",{className:"linha tools",style:"gap:4px;flex-wrap:nowrap"},
+      el("button",{className:"mini fant",disabled:ei===0,"aria-label":"Subir exercício",on:{click:()=>{const a=b.exercicios;[a[ei-1],a[ei]]=[a[ei],a[ei-1]];marcar(b);mudou()}}},"↑"),
+      n>1?el("button",{className:"mini fant",title:"Tirar do bloco e pôr num bloco próprio",on:{click:()=>{b.exercicios.splice(ei,1);marcar(b);const nb={tipo:"simples",exercicios:[e]};marcar(nb);d.blocos.splice(bi+1,0,nb);mudou()}}},"Separar"):null,
+      el("button",{className:"mini fant","aria-label":"Tirar exercício",on:{click:()=>{b.exercicios.splice(ei,1);if(!b.exercicios.length)d.blocos.splice(bi,1);else marcar(b);mudou()}}},"×")),
+    el("div",{className:"obs"},el("input",{value:e.obs||"",placeholder:"Observação para o aluno (cadência, pegada, amplitude…)","aria-label":"Observação",on:{change:x=>upd("obs",x.target.value.trim())}})));
+}
+function renderBusca(d){
+  const grupos=[...new Set(BIB.map(b=>b[2]))];
+  const q=el("input",{id:"q",placeholder:"Buscar exercício (ex.: supino, remada, rosca)",autocomplete:"off"});
+  const g=el("select",{id:"qg","aria-label":"Grupo"},el("option",{value:""},"Todos os grupos"),...grupos.map(x=>el("option",{value:x},x)));
+  const res=el("div",{className:"res",role:"list"});
+  const add=(item)=>{const e={nome:item.nome,series:"4x10",carga:"",grupo:item.grupo};if(item.id)e.id=item.id;
+    if(buscaEm.bloco!=null&&d.blocos[buscaEm.bloco]){const b=d.blocos[buscaEm.bloco];b.exercicios.push(e);marcar(b)}else{const b={tipo:"simples",exercicios:[e]};marcar(b);d.blocos.push(b)}
+    buscaEm=null;mudou();aviso(item.nome+" adicionado")};
+  const draw=()=>{const t=sem(q.value).split(/\s+/).filter(Boolean),gg=g.value;res.replaceChildren();
+    const hits=BIB.filter(b=>(!gg||b[2]===gg)&&t.every(w=>sem(b[1]+" "+b[3]).includes(w))).slice(0,80);
+    hits.forEach(b=>res.append(el("button",{role:"listitem",on:{click:()=>add({id:b[0],nome:b[1],grupo:b[2]})}},el("span",{},b[1]),el("small",{},b[2]+" · "+b[3]))));
+    if(q.value.trim())res.append(el("button",{on:{click:()=>add({nome:q.value.trim(),grupo:gg||grupoDe(q.value)||undefined})}},el("span",{},"Usar “"+q.value.trim()+"” como exercício novo"),el("small",{},"fora da biblioteca")));
+    if(!hits.length&&!q.value.trim())res.append(el("p",{className:"muted",style:"padding:10px;margin:0"},"Nada nesse grupo."))};
+  q.addEventListener("input",draw);g.addEventListener("change",draw);draw();
+  return el("div",{className:"busca cx",style:"border-style:dashed"},
+    el("div",{className:"linha",style:"justify-content:space-between"},el("strong",{},buscaEm.bloco!=null?"Adicionar ao bloco "+(buscaEm.bloco+1):"Novo exercício (bloco próprio)"),el("button",{className:"mini fant",on:{click:()=>{buscaEm=null;render()}}},"Fechar")),
+    el("div",{className:"linha"},q,g),res);
+}
+
+/* ---------- saída ---------- */
+function planoFinal(){
+  const p=clone(P);p.app_origem="Painel do personal";p.capturado_em=new Date().toISOString().slice(0,10);
+  if(!p.no_fim_de_todo_treino)delete p.no_fim_de_todo_treino;
+  p.sequencia=p.sequencia.filter(s=>p.dias.some(d=>d.dia===s));
+  p.dias.forEach(d=>d.blocos.forEach(b=>{marcar(b);b.exercicios.forEach(e=>{if(!e.grupo){const g=grupoDe(e.nome);if(g)e.grupo=g}if(!e.marcador)delete e.marcador})}));
+  return p}
+function renderEnviar(){
+  const p=planoFinal(),txt=JSON.stringify(p,null,2);$("previa").textContent=txt;
+  const n=p.dias.reduce((s,d)=>s+d.blocos.reduce((t,b)=>t+b.exercicios.length,0),0);
+  $("resumoEnv").textContent=p.dias.length+" dias · "+n+" exercícios";
+}
+function nomeArquivo(){return "treino-"+sem(P.nome||"plano").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+"-"+new Date().toISOString().slice(0,10)+".json"}
+
+/* ---------- último treino (backup do app) ---------- */
+function fmtData(ms){return new Date(ms).toLocaleString("pt-BR",{weekday:"short",day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})}
+function renderUltimo(){
+  const u=$("ultimo"),px=$("proximo");u.replaceChildren();px.replaceChildren();
+  if(!backup){u.append(el("p",{className:"muted",style:"margin:0"},"Abra o backup que o aluno mandou para ver o último treino feito."));
+    px.append(el("p",{className:"muted",style:"margin:0"},"Aparece depois de abrir o backup do aluno."));return}
+  const ss=Object.values(backup.sessoes||{}).filter(s=>s.status==="feito").sort((a,b)=>b.inicio-a.inicio);
+  if(!ss.length){u.append(el("p",{className:"muted"},"O backup não tem treinos concluídos."));return}
+  const s=ss[0],dur=s.fim?Math.round((s.fim-s.inicio)/60000):null;
+  const dias=Math.floor((Date.now()-s.inicio)/864e5);
+  u.append(el("div",{className:"big"},s.dia),
+    el("div",{className:"muted tab"},fmtData(s.inicio)+(dur!=null?" · "+dur+" min":"")+" · "+(dias===0?"hoje":dias===1?"ontem":"há "+dias+" dias")));
+  const lista=el("div",{className:"sess tab"});
+  (s.blocos||[]).forEach(b=>(b.exercicios||[]).forEach(e=>{const feitas=(e.sets||[]).filter(x=>x.feito);
+    const kg=Math.max(0,...feitas.flatMap(x=>(x.fases||[]).map(f=>parseFloat(String(f.kg).replace(",","."))||0)));
+    lista.append(el("div",{},el("span",{},e.nome),el("span",{className:feitas.length?"":"ruim"},feitas.length+"/"+(e.sets||[]).length+" séries"+(kg?" · "+kg+" kg":""))))}));
+  u.append(lista);
+  if(s.batimentos&&s.batimentos.length){const b=s.batimentos.map(x=>x.bpm);u.append(el("div",{className:"muted tab"},"Batimentos: média "+Math.round(b.reduce((a,c)=>a+c,0)/b.length)+" · máx "+Math.max(...b)+" bpm"))}
+  u.append(el("div",{className:"muted"},ss.length+" treinos no histórico. Antes desse: "+ss.slice(1,4).map(x=>x.dia+" ("+new Date(x.inicio).toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})+")").join(", ")));
+  // próximo na sequência: menor sufixo do histórico que casa com a sequência
+  const seq=P.sequencia.length?P.sequencia:P.dias.map(d=>d.dia).filter(n=>n!==P.no_fim_de_todo_treino);
+  const hist=ss.map(x=>x.dia).filter(n=>seq.includes(n)).reverse();
+  let best=0,pos=0;for(let i=0;i<seq.length;i++){let k=0;while(k<hist.length&&k<=i&&hist[hist.length-1-k]===seq[i-k])k++;if(k>best){best=k;pos=(i+1)%seq.length}}
+  if(seq.length){px.append(el("div",{className:"big"},seq[pos]),el("div",{className:"muted"},"Depois: "+[1,2].map(k=>seq[(pos+k)%seq.length]).join(" › ")+(P.no_fim_de_todo_treino?" · sempre + "+P.no_fim_de_todo_treino:"")))}
+}
+
+/* ---------- arquivos ---------- */
+function lerArquivo(inp,f){const file=inp.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{try{f(JSON.parse(r.result))}catch(e){aviso("Esse arquivo não é um JSON válido.")}inp.value=""};r.readAsText(file)}
+$("abrirPlano").addEventListener("change",e=>lerArquivo(e.target,j=>{
+  if(j.formato==="caderno-de-treino-backup"){backup=j;if(j.plano){P=normalizar(j.plano);diaSel=0}mudou();aviso("Backup aberto: plano e histórico do aluno carregados.");return}
+  if(!Array.isArray(j.dias)){aviso("Não achei dias de treino nesse arquivo.");return}
+  P=normalizar(j);diaSel=0;mudou();aviso("Plano aberto.")}));
+$("abrirBackup").addEventListener("change",e=>lerArquivo(e.target,j=>{
+  if(j.formato!=="caderno-de-treino-backup"){aviso("Esse não é o backup do app Caderno.");return}
+  backup=j;renderUltimo();aviso("Histórico do aluno carregado.")}));
+$("nomePlano").addEventListener("change",e=>{P.nome=e.target.value.trim()||"Plano do personal";mudou()});
+$("addDia").addEventListener("click",()=>{let n="Treino "+String.fromCharCode(65+P.dias.length%26);while(P.dias.some(d=>d.dia===n))n+="'";P.dias.push({dia:n,blocos:[]});diaSel=P.dias.length-1;mudou();setTimeout(()=>$("editor").querySelector("input")?.select())});
+$("seqBtn").addEventListener("click",()=>{const v=$("seqAdd").value;if(v){P.sequencia.push(v);mudou()}});
+$("fim").addEventListener("change",e=>{if(e.target.value){P.no_fim_de_todo_treino=e.target.value;P.sequencia=P.sequencia.filter(s=>s!==e.target.value)}else delete P.no_fim_de_todo_treino;mudou()});
+$("novoPlano").addEventListener("click",function(){if(!this.dataset.armado){this.dataset.armado=1;this.textContent="Apagar o atual?";setTimeout(()=>{delete this.dataset.armado;this.textContent="Plano em branco"},3000);return}
+  delete this.dataset.armado;this.textContent="Plano em branco";P=normalizar({nome:"Plano novo",dias:[{dia:"Treino A",blocos:[]}],sequencia:[]});diaSel=0;mudou()});
+$("irEnviar").addEventListener("click",()=>{const n=$("nvEnviar");if(n&&!n.hidden)n.click();else $("enviar").scrollIntoView({behavior:"smooth"})});
+$("copiar").addEventListener("click",async()=>{const t=JSON.stringify(planoFinal(),null,2);
+  try{await navigator.clipboard.writeText(t);aviso("Copiado. Cole num arquivo .json ou na conversa.")}catch(e){const s=getSelection(),r=document.createRange();r.selectNodeContents($("previa"));s.removeAllRanges();s.addRange(r);aviso("Texto selecionado: use Ctrl+C.")}});
+let downloads=null;
+$("baixar").addEventListener("click",async()=>{
+  const t=JSON.stringify(planoFinal(),null,2);
+  if(downloads){try{await downloads.save({filename:nomeArquivo(),data:t});aviso("Arquivo pronto. Mande pelo WhatsApp.")}catch(e){aviso("Download cancelado.")}return}
+  try{const a=el("a",{href:URL.createObjectURL(new Blob([t],{type:"application/json"})),download:nomeArquivo()});document.body.append(a);a.click();a.remove()}catch(e){}
+  aviso("Se o download não começou, use Copiar texto.")});
+(async()=>{try{downloads=await window.claude?.use?.("downloads")}catch(e){}})();
+
+carregar();render();
+
+/* ---------- nuvem (Supabase), só quando a página tem config ---------- */
+const NV=(typeof SUPA_URL!=="undefined"&&SUPA_URL&&typeof SUPA_KEY!=="undefined")?{url:SUPA_URL.replace(/\/$/,""),key:SUPA_KEY}:null;
+let sess=null,alunos=[],alunoSel=null;
+function lerSess(){try{return JSON.parse(localStorage.getItem("painel-sessao"))}catch(e){return null}}
+function gravarSess(s){sess=s;try{s?localStorage.setItem("painel-sessao",JSON.stringify(s)):localStorage.removeItem("painel-sessao")}catch(e){}}
+async function auth(caminho,corpo){
+  const r=await fetch(NV.url+"/auth/v1/"+caminho,{method:"POST",headers:{apikey:NV.key,"Content-Type":"application/json"},body:JSON.stringify(corpo)});
+  const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.msg||j.error_description||j.message||("Erro "+r.status));return j}
+function guardarToken(j){gravarSess({access:j.access_token,refresh:j.refresh_token,expira:Date.now()+(j.expires_in||3600)*1000-60000,uid:j.user.id,email:j.user.email})}
+async function token(){if(!sess)throw new Error("Entre de novo.");
+  if(Date.now()>sess.expira){try{guardarToken(await auth("token?grant_type=refresh_token",{refresh_token:sess.refresh}))}catch(e){gravarSess(null);renderNuvem();throw new Error("Sessão expirou. Entre de novo.")}}
+  return sess.access}
+async function rest(caminho,opt={}){
+  const r=await fetch(NV.url+"/rest/v1/"+caminho,{...opt,headers:{apikey:NV.key,Authorization:"Bearer "+await token(),"Content-Type":"application/json",...(opt.headers||{})}});
+  if(!r.ok){const j=await r.json().catch(()=>({}));throw new Error(j.message||("Erro "+r.status))}
+  return r.status===204?null:r.json()}
+function renderNuvem(){
+  if(!NV)return;$("nuvem").hidden=false;const on=!!sess;
+  $("irEnviar").textContent=on&&alunoSel?"Enviar para o app do aluno":"Enviar para o aluno";
+  $("nvLogin").hidden=on;$("nvSair").hidden=!on;$("nvEnviar").hidden=!(on&&alunoSel);
+  if(on){$("nvQuem").textContent=sess.email;
+    $("nvAluno").replaceChildren(...(alunos.length?alunos.map(a=>el("option",{value:a.aluno,selected:a.aluno===alunoSel},a.aluno_nome)):[el("option",{value:""},"Nenhum aluno ligado à sua conta ainda")]))}
+}
+async function carregarAlunos(){
+  alunos=await rest("vinculos?select=aluno,aluno_nome&personal=eq."+sess.uid+"&order=aluno_nome");
+  if(!alunos.some(a=>a.aluno===alunoSel))alunoSel=alunos[0]?.aluno||null;renderNuvem();
+  if(alunoSel)await carregarTreinos()}
+async function carregarTreinos(){
+  const ts=await rest("treinos_feitos?select=resumo&aluno=eq."+alunoSel+"&order=inicio.desc&limit=30");
+  const sessoes={};ts.forEach(t=>{const s=t.resumo;if(s&&s.id)sessoes[s.id]=s});
+  backup={formato:"caderno-de-treino-backup",sessoes};renderUltimo();
+  $("nvStatus").textContent=ts.length?"":"O app do aluno ainda não mandou treinos."}
+async function abrirPlanoAluno(){
+  const r=await rest("planos?select=plano,criado_em&aluno=eq."+alunoSel+"&order=criado_em.desc&limit=1");
+  if(!r.length){aviso("Esse aluno ainda não recebeu plano pelo painel.");return}
+  P=normalizar(r[0].plano);diaSel=0;mudou();aviso("Plano enviado em "+new Date(r[0].criado_em).toLocaleDateString("pt-BR")+" aberto.")}
+if(NV){
+  sess=lerSess();
+  $("nvLogin").addEventListener("submit",async e=>{e.preventDefault();$("nvMsg").textContent="Entrando…";
+    try{guardarToken(await auth("token?grant_type=password",{email:$("nvEmail").value.trim(),password:$("nvSenha").value}));$("nvMsg").textContent="";renderNuvem();await carregarAlunos()}
+    catch(x){$("nvMsg").textContent=/invalid/i.test(x.message)?"E-mail ou senha errados.":x.message}});
+  $("nvCriar").addEventListener("click",async()=>{const f=$("nvLogin");if(!f.reportValidity())return;$("nvMsg").textContent="Criando…";
+    try{const j=await auth("signup",{email:$("nvEmail").value.trim(),password:$("nvSenha").value});
+      if(j.access_token){guardarToken(j);renderNuvem();await carregarAlunos()}
+      $("nvMsg").textContent="Conta criada. Peça ao aluno para ligar a sua conta à dele."}catch(x){$("nvMsg").textContent=x.message}});
+  $("nvLogout").addEventListener("click",()=>{gravarSess(null);alunos=[];alunoSel=null;backup=null;renderNuvem();renderUltimo()});
+  $("nvAluno").addEventListener("change",async e=>{alunoSel=e.target.value||null;renderNuvem();if(alunoSel)carregarTreinos().catch(x=>aviso(x.message))});
+  $("nvCarregar").addEventListener("click",()=>abrirPlanoAluno().catch(x=>aviso(x.message)));
+  $("nvEnviar").addEventListener("click",async function(){
+    if(!alunoSel)return;this.disabled=true;
+    try{await rest("planos",{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify({aluno:alunoSel,plano:planoFinal()})});
+      const nome=alunos.find(a=>a.aluno===alunoSel)?.aluno_nome||"aluno";aviso("Enviado. Chega no app de "+nome+" quando ele abrir.");$("nvStatus").textContent="Último envio: "+new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}
+    catch(x){aviso("Não enviei: "+x.message)}finally{this.disabled=false}});
+  renderNuvem();
+  if(sess)carregarAlunos().catch(x=>aviso(x.message));
+  setInterval(()=>{if(sess&&alunoSel&&!document.hidden)carregarTreinos().catch(()=>{})},60000);
+}
+
+</script>
+
+</body></html>
